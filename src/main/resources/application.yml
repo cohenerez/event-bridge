@@ -1,0 +1,38 @@
+server:
+  port: ${PORT:8081}
+  shutdown: graceful
+
+spring:
+  application:
+    name: event-bridge
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9094}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      properties:
+        enable.idempotence: true
+        # Consumers map the JSON to their own class; don't leak this service's class names
+        spring.json.add.type.headers: false
+
+bridge:
+  salesforce:
+    login-url: ${SF_LOGIN_URL:}
+    client-id: ${SF_CLIENT_ID:}
+    client-secret: ${SF_CLIENT_SECRET:}
+  topic: /event/LoanStatusChanged__e
+  kafka-topic: loan-events
+  batch-size: 100
+  replay-file: ${REPLAY_FILE:./data/replay-id}
+  subscription-enabled: ${SUBSCRIPTION_ENABLED:true}
+  reconnect-delay: 5s
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
