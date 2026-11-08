@@ -11,7 +11,7 @@ import org.apache.avro.io.BinaryDecoder;
 import org.apache.avro.io.DatumReader;
 import org.apache.avro.io.DecoderFactory;
 
-/** Decodes Avro event payloads and maps LoanStatusChanged__e fields to {@link LoanStatusEvent}. */
+
 public class EventDecoder {
 
     public GenericRecord decode(byte[] payload, Schema schema) throws IOException {

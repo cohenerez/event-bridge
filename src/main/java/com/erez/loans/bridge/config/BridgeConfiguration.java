@@ -24,8 +24,7 @@ public class BridgeConfiguration {
 
     @Bean
     public NewTopic loanEventsTopic(BridgeProperties properties) {
-        // Keyed by loan ID: 3 partitions allow parallel consumers while keeping each loan's events in order
-        return TopicBuilder.name(properties.kafkaTopic()).partitions(3).replicas(1).build();
+       return TopicBuilder.name(properties.kafkaTopic()).partitions(3).replicas(1).build();
     }
 
     @Bean
@@ -38,7 +37,7 @@ public class BridgeConfiguration {
         return new EventDecoder();
     }
 
-    @Bean // ManagedChannel.shutdown() is called on close
+    @Bean
     @ConditionalOnProperty(name = "bridge.subscription-enabled", havingValue = "true", matchIfMissing = true)
     public ManagedChannel pubSubChannel(BridgeProperties properties) {
         return ManagedChannelBuilder

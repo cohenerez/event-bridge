@@ -29,19 +29,7 @@ import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.context.SmartLifecycle;
 
-/**
- * Long-lived Pub/Sub API subscription to LoanStatusChanged__e.
- *
- * <ul>
- *   <li>Resumes from the last saved replay ID (CUSTOM) or starts at LATEST the first time.</li>
- *   <li>Flow control: asks for {@code batchSize} events and asks again when Salesforce has none left
- *       pending.</li>
- *   <li>At-least-once: the replay ID is saved only after Kafka acknowledged the event. If forwarding
- *       fails, the stream is cancelled and reopened from the last saved replay ID, so the event is
- *       delivered again. Consumers drop duplicates by event UUID.</li>
- *   <li>Reconnects after any stream error, and logs in again when the token was rejected.</li>
- * </ul>
- */
+
 public class LoanEventSubscriber implements SmartLifecycle, HealthIndicator {
 
     private static final Logger log = LoggerFactory.getLogger(LoanEventSubscriber.class);
@@ -84,7 +72,6 @@ public class LoanEventSubscriber implements SmartLifecycle, HealthIndicator {
         this.reconnectDelay = reconnectDelay;
     }
 
-    // ---------- lifecycle ----------
 
     @Override
     public void start() {
@@ -113,7 +100,7 @@ public class LoanEventSubscriber implements SmartLifecycle, HealthIndicator {
         return forwarded.get();
     }
 
-    // ---------- subscription ----------
+
 
     synchronized void subscribe() {
         if (!running) {
@@ -154,7 +141,7 @@ public class LoanEventSubscriber implements SmartLifecycle, HealthIndicator {
         }
     }
 
-    /** Forwards one event; returns false if it could not be forwarded. */
+
     private boolean forward(ConsumerEvent consumerEvent) {
         try {
             Schema schema = schemas.get(consumerEvent.getEvent().getSchemaId());
@@ -192,7 +179,6 @@ public class LoanEventSubscriber implements SmartLifecycle, HealthIndicator {
                 }
             }
             if (response.getEventsCount() == 0 && !response.getLatestReplayId().isEmpty()) {
-                // Keepalive: nothing new, but the position moved on
                 replayStore.save(response.getLatestReplayId());
             }
             if (response.getPendingNumRequested() == 0) {
@@ -220,9 +206,7 @@ public class LoanEventSubscriber implements SmartLifecycle, HealthIndicator {
         }
     }
 
-    // ---------- health ----------
-
-    @Override
+     @Override
     public Health health() {
         Health.Builder builder = subscribed ? Health.up() : Health.down();
         builder.withDetail("topic", topic).withDetail("forwarded", forwarded.get());

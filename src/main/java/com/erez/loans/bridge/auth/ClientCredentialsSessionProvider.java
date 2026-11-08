@@ -12,11 +12,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClient;
 
-/**
- * Logs in with the OAuth 2.0 client credentials flow of an External Client App. The token response
- * carries the instance URL and an identity URL ending in /id/{orgId}/{userId}, from which the
- * tenant ID is taken.
- */
+
 @Component
 public class ClientCredentialsSessionProvider implements SessionProvider {
 
@@ -69,7 +65,6 @@ public class ClientCredentialsSessionProvider implements SessionProvider {
         return new SalesforceSession(token.accessToken(), token.instanceUrl(), tenantId);
     }
 
-    /** https://login.salesforce.com/id/00Dxx0000000001EAA/005xx000001X8UzAAK -> 00Dxx0000000001EAA */
     static String tenantIdFrom(String identityUrl) {
         if (identityUrl == null) {
             throw new IllegalStateException("Token response has no identity URL");

@@ -6,10 +6,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.avro.Schema;
 
-/**
- * Fetches Avro schemas by ID from the Pub/Sub API and keeps them. A schema ID changes only when the
- * event's fields change, so after the first event this costs nothing.
- */
+
+// Fetches Avro schemas by ID from the Pub/Sub API and keeps them. A schema ID changes only when the
+// event's fields change, so after the first event this costs nothing.
+
 public class SchemaCache {
 
     private final PubSubGrpc.PubSubBlockingStub stub;

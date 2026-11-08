@@ -7,7 +7,7 @@ import io.grpc.Metadata;
 import io.grpc.Status;
 import java.util.concurrent.Executor;
 
-/** Adds the three headers the Pub/Sub API authenticates with to every gRPC call. */
+// Adds the three headers the Pub/Sub API authenticates with to every gRPC call.
 public class PubSubCallCredentials extends CallCredentials {
 
     static final Metadata.Key<String> ACCESS_TOKEN = Metadata.Key.of("accesstoken", Metadata.ASCII_STRING_MARSHALLER);

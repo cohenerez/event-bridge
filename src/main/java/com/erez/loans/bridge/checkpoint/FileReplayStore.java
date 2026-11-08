@@ -10,11 +10,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.Base64;
 import java.util.Optional;
 
-/**
- * Keeps the replay ID in a small file (Base64). Writes go to a temp file that is then moved into
- * place, so a crash mid-write never leaves a corrupt checkpoint. Salesforce retains platform events
- * for 72 hours, so the bridge can be down that long without losing events.
- */
+
 public class FileReplayStore implements ReplayStore {
 
     private final Path file;
